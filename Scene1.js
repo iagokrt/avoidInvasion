@@ -30,9 +30,25 @@ class Scene1 extends Phaser.Scene {
     this.load.image("ship", "assets/ship.png");
 
     //enemy ships
-    this.load.image("ship1", "assets/ships/enemy-small.png");
-    this.load.image("ship2", "assets/ships/enemy-medium.png");
-    this.load.image("ship3", "assets/ships/enemy-big.png");
+    this.load.spritesheet("ship1", "assets/ships/enemy-small.png", {
+      frameWidth: 16,
+      frameHeight: 16
+    });
+    this.load.spritesheet("ship2", "assets/ships/enemy-medium.png", {
+      frameWidth: 32,
+      frameHeight: 16
+    });
+    this.load.spritesheet("ship3", "assets/ships/enemy-big.png", {
+      frameWidth: 32,
+      frameHeight: 32
+    });
+
+    // visual-effects
+
+    this.load.spritesheet("explosion", "assets/explosion.png", {
+      frameWidth: 16,
+      frameHeight: 16
+    });
   }
 
   create() {

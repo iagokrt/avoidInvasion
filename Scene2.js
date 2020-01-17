@@ -48,17 +48,49 @@ class Scene2 extends Phaser.Scene {
     // this.ship = this.add.image(config.width / 2, config.height / 1.5, "ship");
 
     // enemy ships
-    this.ship1 = this.add.image(
+    this.ship1 = this.add.sprite(
       config.width / 2 - 50,
       config.height / 2,
       "ship1"
     );
-    this.ship2 = this.add.image(config.width / 2, config.height / 2, "ship2");
-    this.ship3 = this.add.image(
+    this.ship2 = this.add.sprite(config.width / 2, config.height / 2, "ship2");
+    this.ship3 = this.add.sprite(
       config.width / 2 + 50,
       config.height / 2,
       "ship3"
     );
+
+    // animating spritesheets
+    // anims enemy ships
+    this.anims.create({
+      key: "ship1_anim",
+      frames: this.anims.generateFrameNumbers("ship1"),
+      frameRate: 20,
+      repeat: -1
+    });
+    this.anims.create({
+      key: "ship2_anim",
+      frames: this.anims.generateFrameNumbers("ship2"),
+      frameRate: 18,
+      repeat: -1
+    });
+    this.anims.create({
+      key: "ship3_anim",
+      frames: this.anims.generateFrameNumbers("ship3"),
+      frameRate: 20,
+      repeat: -1
+    });
+    this.anims.create({
+      key: "explode",
+      frames: this.anims.generateFrameNumbers("explosion"),
+      frameRate: 20,
+      repeat: 0,
+      hideOnComplete: true
+    });
+
+    this.ship1.play("ship1_anim");
+    this.ship2.play("ship2_anim");
+    this.ship3.play("ship3_anim");
   }
 
   moveShip(ship, speed) {
