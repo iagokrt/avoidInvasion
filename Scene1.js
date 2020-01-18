@@ -4,7 +4,7 @@ class Scene1 extends Phaser.Scene {
   }
 
   preload() {
-    //background environment images
+    // Loading background environment images
     this.load.image(
       "space-background",
       "assets/gamebackground/parallax-space-background.png"
@@ -26,10 +26,13 @@ class Scene1 extends Phaser.Scene {
       "assets/gamebackground/parallax-space-stars.png"
     );
 
-    //player ship
-    this.load.image("ship", "assets/ship.png");
+    // Loading player ship
+    this.load.spritesheet("player", "assets/ship.png", {
+      frameWidth: 16,
+      frameHeight: 24
+    });
 
-    //enemy ships
+    // Loading enemy ships
     this.load.spritesheet("ship1", "assets/ships/enemy-small.png", {
       frameWidth: 16,
       frameHeight: 16
@@ -43,9 +46,15 @@ class Scene1 extends Phaser.Scene {
       frameHeight: 32
     });
 
-    // visual-effects
-
+    // Visual-effects
+    // Loading explosion
     this.load.spritesheet("explosion", "assets/explosion.png", {
+      frameWidth: 16,
+      frameHeight: 16
+    });
+
+    // Loading shoots!!
+    this.load.spritesheet("beam", "assets/beam.png", {
       frameWidth: 16,
       frameHeight: 16
     });
@@ -54,5 +63,52 @@ class Scene1 extends Phaser.Scene {
   create() {
     this.add.text(20, 20, "Loading Game...");
     this.scene.start("playGame");
+
+    // Animating spritesheets
+    // Enemy ships
+    this.anims.create({
+      key: "ship1_anim",
+      frames: this.anims.generateFrameNumbers("ship1"),
+      frameRate: 20,
+      repeat: -1
+    });
+    this.anims.create({
+      key: "ship2_anim",
+      frames: this.anims.generateFrameNumbers("ship2"),
+      frameRate: 18,
+      repeat: -1
+    });
+    this.anims.create({
+      key: "ship3_anim",
+      frames: this.anims.generateFrameNumbers("ship3"),
+      frameRate: 20,
+      repeat: -1
+    });
+    // Explosion
+    this.anims.create({
+      key: "explode",
+      frames: this.anims.generateFrameNumbers("explosion"),
+      frameRate: 20,
+      repeat: 0,
+      hideOnComplete: true
+    });
+
+    // Player
+    this.anims.create({
+      key: "thrust",
+      frames: this.anims.generateFrameNumbers("player", {
+        start: 2,
+        end: 2
+      }),
+      frameRate: 20,
+      repeat: -1
+    });
+    // Shoots fired!!
+    this.anims.create({
+      key: "beam_anim",
+      frames: this.anims.generateFrameNumbers("beam"),
+      frameRate: 20,
+      repeat: -1
+    });
   }
 }

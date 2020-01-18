@@ -4,16 +4,7 @@ class Scene2 extends Phaser.Scene {
   }
 
   create() {
-    /*
-    this.background = this.add.tileSprite(
-      0,
-      0,
-      config.width,
-      config.height,
-      "space-background"
-    );
-    this.background.setOrigin(0, 0);
-      */
+    // create parallax background
     this.backgroundStars = this.add.tileSprite(
       0,
       0,
@@ -33,20 +24,6 @@ class Scene2 extends Phaser.Scene {
     this.backgroundFarPlanets.setOrigin(0, 0);
     this.backgroundFarPlanets.setScale(1);
 
-    /*
-    this.backgroundRingPlanet = this.add.image(
-      config.width / 2,
-      config.height / 7,
-      "space-ring-planet"
-    );
-    this.backgroundRingPlanet.setOrigin(0, 2.3);
-    this.backgroundRingPlanet.setScale(0.5);
-    this.backgroundRingPlanet.setRotation(20.2);
-    */
-
-    // player ship
-    // this.ship = this.add.image(config.width / 2, config.height / 1.5, "ship");
-
     // enemy ships
     this.ship1 = this.add.sprite(
       config.width / 2 - 50,
@@ -60,37 +37,75 @@ class Scene2 extends Phaser.Scene {
       "ship3"
     );
 
-    // animating spritesheets
-    // anims enemy ships
-    this.anims.create({
-      key: "ship1_anim",
-      frames: this.anims.generateFrameNumbers("ship1"),
-      frameRate: 20,
-      repeat: -1
-    });
-    this.anims.create({
-      key: "ship2_anim",
-      frames: this.anims.generateFrameNumbers("ship2"),
-      frameRate: 18,
-      repeat: -1
-    });
-    this.anims.create({
-      key: "ship3_anim",
-      frames: this.anims.generateFrameNumbers("ship3"),
-      frameRate: 20,
-      repeat: -1
-    });
-    this.anims.create({
-      key: "explode",
-      frames: this.anims.generateFrameNumbers("explosion"),
-      frameRate: 20,
-      repeat: 0,
-      hideOnComplete: true
-    });
-
     this.ship1.play("ship1_anim");
     this.ship2.play("ship2_anim");
     this.ship3.play("ship3_anim");
+
+    this.ship1.setInteractive();
+    this.ship2.setInteractive();
+    this.ship3.setInteractive();
+
+    // player ship
+    this.player = this.physics.add.sprite(
+      config.width / 2 - 8,
+      config.height - 64,
+      "player"
+    );
+    this.player.play("thrust");
+    this.cursorKeys = this.input.keyboard.createCursorKeys();
+    this.player.setCollideWorldBounds(true);
+
+    this.spacebar = this.input.keyboard.addKey(
+      Phaser.Input.Keyboard.KeyCodes.SPACE
+    );
+    this.projectiles = this.add.group();
+  }
+
+  update() {
+    // Background parallax 'Moviment'
+    this.backgroundStars.tilePositionY -= 0.5;
+    this.backgroundFarPlanets.tilePositionY += 0.1;
+    this.backgroundFarPlanets.tilePositionX -= 0.4;
+
+    // Enemy ships flying forward
+    this.moveShip(this.ship1, 0.7);
+    this.moveShip(this.ship2, 0.5);
+    this.moveShip(this.ship3, 0.3);
+
+    this.movePlayerManager();
+
+    if (Phaser.Input.Keyboard.JustDown(this.spacebar)) {
+      this.shootBeam();
+    }
+    for (var i = 0; i < this.projectiles.getChildren().length; i++) {
+      var beam = this.projectiles.getChildren()[i];
+      beam.update();
+    }
+  }
+
+  //shoots
+  shootBeam() {
+    var beam = new Beam(this);
+  }
+
+  // Player mechanics
+  movePlayerManager() {
+    // stop movement on keyUp
+    this.player.setVelocity(0);
+
+    // arrowKeys
+    if (this.cursorKeys.left.isDown) {
+      this.player.setVelocityX(-gameSettings.playerSpeed);
+      this.player.play("thrust");
+    } else if (this.cursorKeys.right.isDown) {
+      this.player.setVelocityX(+gameSettings.playerSpeed);
+      this.player.play("thrust");
+    }
+    if (this.cursorKeys.up.isDown) {
+      this.player.setVelocityY(-gameSettings.playerSpeed);
+    } else if (this.cursorKeys.down.isDown) {
+      this.player.setVelocityY(+gameSettings.playerSpeed);
+    }
   }
 
   moveShip(ship, speed) {
@@ -104,17 +119,5 @@ class Scene2 extends Phaser.Scene {
     ship.y = 0;
     var randomX = Phaser.Math.Between(0, config.width);
     ship.x = randomX;
-  }
-
-  update() {
-    //background parallax
-    this.backgroundStars.tilePositionY -= 0.5;
-    this.backgroundFarPlanets.tilePositionY += 0.1;
-    this.backgroundFarPlanets.tilePositionX -= 0.4;
-
-    //enemy ships flying forward
-    this.moveShip(this.ship1, 0.7);
-    this.moveShip(this.ship2, 0.5);
-    this.moveShip(this.ship3, 0.3);
   }
 }
