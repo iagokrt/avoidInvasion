@@ -1,5 +1,5 @@
 var gameSettings = {
-  playerSpeed: 100
+  playerSpeed: 150
 };
 
 var config = {
